@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SewPro — Industrial & Home Sewing Machines</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ── Reset & Variables ── */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --navy: #0a1628;
+            --navy-light: #121f36;
+            --accent: #f97316;
+            --accent-light: #fb923c;
+            --accent-glow: rgba(249, 115, 22, 0.25);
+            --cyan: #06b6d4;
+            --white: #ffffff;
+            --gray-100: #f1f5f9;
+            --gray-200: #e2e8f0;
+            --gray-300: #cbd5e1;
+            --gray-400: #94a3b8;
+            --gray-500: #64748b;
+            --gray-600: #475569;
+            --gray-700: #334155;
+            --green: #22c55e;
+            --red: #ef4444;
+            --radius: 16px;
+            --radius-sm: 10px;
+            --shadow: 0 4px 24px rgba(0,0,0,0.12);
+            --shadow-lg: 0 12px 48px rgba(0,0,0,0.2);
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            color: var(--gray-700);
+            background: var(--white);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* ── Utility ── */
+        .container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+        .section-label {
+            display: inline-flex; align-items: center; gap: 8px;
+            font-size: 0.8rem; font-weight: 700; letter-spacing: 0.12em;
+            text-transform: uppercase; color: var(--accent);
+            background: rgba(249,115,22,0.1); padding: 6px 16px;
+            border-radius: 50px; margin-bottom: 16px;
+        }
+        .section-label .dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; }
+        .section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2rem, 4vw, 3rem); font-weight: 700;
+            color: var(--navy); line-height: 1.2; margin-bottom: 16px;
+        }
+        .section-subtitle { font-size: 1.1rem; color: var(--gray-500); max-width: 600px; line-height: 1.7; }
+
+        /* ── Navbar ── */
+        .navbar {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+            background: rgba(255,255,255,0.92); backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--gray-200);
+            transition: box-shadow 0.3s;
+        }
+        .navbar.scrolled { box-shadow: 0 2px 20px rgba(0,0,0,0.08); }
+        .navbar .container { display: flex; align-items: center; justify-content: space-between; height: 72px; }
+        .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .logo-icon {
+            width: 40px; height: 40px; background: var(--accent); border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px; color: white; font-weight: 800;
+        }
+        .logo-text { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.4rem; color: var(--navy); }
+        .logo-text span { color: var(--accent); }
+        .nav-links { display: flex; align-items: center; gap: 32px; list-style: none; }
+        .nav-links a {
+            text-decoration: none; color: var(--gray-600); font-size: 0.9rem;
+            font-weight: 500; transition: color 0.2s; position: relative;
+        }
+        .nav-links a:hover { color: var(--navy); }
+        .nav-links a::after {
+            content: ''; position: absolute; bottom: -4px; left: 0; width: 0;
+            height: 2px; background: var(--accent); transition: width 0.3s;
+        }
+        .nav-links a:hover::after { width: 100%; }
+        .nav-cta {
+            background: var(--navy); color: white !important; padding: 10px 24px;
+            border-radius: 50px; font-weight: 600; transition: all 0.3s;
+        }
+        .nav-cta:hover { background: var(--accent); transform: translateY(-1px); box-shadow: var(--accent-glow) 0 4px 12px; }
+        .nav-cta::after { display: none !important; }
+        .mobile-toggle { display: none; background: none; border: none; cursor: pointer; padding: 8px; }
+        .mobile-toggle span { display: block; width: 24px; height: 2px; background: var(--navy); margin: 6px 0; transition: 0.3s; }
+
+        /* ── Hero ── */
+        .hero {
+            min-height: 100vh; display: flex; align-items: center;
+            background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 50%, #1a2d4a 100%);
+            position: relative; overflow: hidden; padding-top: 72px;
+        }
+        .hero::before {
+            content: ''; position: absolute; top: -50%; right: -20%;
+            width: 800px; height: 800px; border-radius: 50%;
+            background: radial-gradient(circle, var(--accent-glow), transparent 70%);
+            animation: pulse 8s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.15); opacity: 0.8; }
+        }
+        .hero .container { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; position: relative; z-index: 2; }
+        .hero-content h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2.5rem, 5.5vw, 4rem); font-weight: 800;
+            color: var(--white); line-height: 1.1; margin-bottom: 24px;
+        }
+        .hero-content h1 .highlight {
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero-content p { color: var(--gray-400); font-size: 1.15rem; line-height: 1.7; margin-bottom: 36px; max-width: 520px; }
+        .hero-buttons { display: flex; gap: 16px; flex-wrap: wrap; }
+        .btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 14px 32px; border-radius: 50px; font-weight: 600;
+            font-size: 0.95rem; text-decoration: none; transition: all 0.3s; cursor: pointer; border: none;
+        }
+        .btn-primary {
+            background: var(--accent); color: white;
+            box-shadow: 0 4px 20px var(--accent-glow);
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(249,115,22,0.4); }
+        .btn-outline { background: transparent; color: white; border: 2px solid rgba(255,255,255,0.3); }
+        .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+        .hero-stats { display: flex; gap: 40px; margin-top: 48px; padding-top: 32px; border-top: 1px solid rgba(255,255,255,0.1); }
+        .hero-stat h3 { font-family: 'Space Grotesk', sans-serif; font-size: 2rem; font-weight: 700; color: var(--accent); }
+        .hero-stat p { color: var(--gray-400); font-size: 0.85rem; font-weight: 500; }
+        .hero-image { position: relative; }
+        .hero-image img {
+            width: 100%; border-radius: 24px; box-shadow: var(--shadow-lg);
+            transform: perspective(1000px) rotateY(-5deg);
+            transition: transform 0.6s;
+        }
+        .hero-image:hover img { transform: perspective(1000px) rotateY(0deg); }
+        .hero-badge {
+            position: absolute; bottom: -20px; left: -20px;
+            background: white; border-radius: 16px; padding: 16px 20px;
+            box-shadow: var(--shadow); display: flex; align-items: center; gap: 12px;
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .hero-badge-icon { width: 44px; height: 44px; background: rgba(34,197,94,0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; }
+        .hero-badge-text strong { display: block; color: var(--navy); font-size: 0.9rem; }
+        .hero-badge-text span { color: var(--gray-500); font-size: 0.8rem; }
+
+        /* ── Trusted Bar ── */
+        .trusted {
+            padding: 48px 0; background: var(--gray-100);
+            border-top: 1px solid var(--gray-200); border-bottom: 1px solid var(--gray-200);
+        }
+        .trusted p { text-align: center; color: var(--gray-500); font-size: 0.8rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 24px; }
+        .trusted-logos { display: flex; justify-content: center; align-items: center; gap: 48px; flex-wrap: wrap; opacity: 0.5; }
+        .trusted-logos span {
+            font-family: 'Space Grotesk', sans-serif; font-size: 1.2rem; font-weight: 700;
+            color: var(--gray-600); letter-spacing: 0.05em;
+        }
+
+        /* ── Industrial Section ── */
+        .industrial { padding: 100px 0; background: var(--white); }
+        .industrial-header { text-align: center; margin-bottom: 64px; }
+        .industrial-header .section-subtitle { margin: 0 auto; }
+
+        /* ── Machine Grid ── */
+        .machine-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 28px;
+        }
+        .machine-card {
+            background: var(--white); border: 1px solid var(--gray-200);
+            border-radius: var(--radius); overflow: hidden; transition: all 0.4s;
+            position: relative; group: card;
+        }
+        .machine-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); border-color: var(--accent); }
+        .machine-card-img {
+            width: 100%; height: 220px; object-fit: cover;
+            transition: transform 0.5s;
+        }
+        .machine-card:hover .machine-card-img { transform: scale(1.05); }
+        .machine-card-img-wrap { overflow: hidden; position: relative; }
+        .machine-card-badge {
+            position: absolute; top: 16px; left: 16px;
+            background: var(--accent); color: white;
+            padding: 4px 12px; border-radius: 50px; font-size: 0.75rem;
+            font-weight: 700; letter-spacing: 0.05em; z-index: 2;
+        }
+        .machine-card-body { padding: 24px; }
+        .machine-card-body h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem; font-weight: 700; color: var(--navy);
+            margin-bottom: 8px;
+        }
+        .machine-card-body p { color: var(--gray-500); font-size: 0.9rem; line-height: 1.6; margin-bottom: 16px; }
+        .machine-features { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+        .machine-features span {
+            background: var(--gray-100); color: var(--gray-600);
+            padding: 4px 12px; border-radius: 50px; font-size: 0.78rem; font-weight: 500;
+        }
+        .machine-card-link {
+            display: inline-flex; align-items: center; gap: 6px;
+            color: var(--accent); font-weight: 600; font-size: 0.9rem;
+            text-decoration: none; transition: gap 0.3s;
+        }
+        .machine-card-link:hover { gap: 12px; }
+
+        /* ── Spare Parts ── */
+        .spareparts {
+            padding: 100px 0;
+            background: linear-gradient(135deg, var(--navy), var(--navy-light));
+            position: relative; overflow: hidden;
+        }
+        .spareparts::before {
+            content: ''; position: absolute; top: -100px; right: -100px;
+            width: 400px; height: 400px; border-radius: 50%;
+            background: radial-gradient(circle, rgba(6,182,212,0.15), transparent 70%);
+        }
+        .spareparts .container { position: relative; z-index: 2; display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+        .spareparts .section-label { background: rgba(6,182,212,0.15); color: var(--cyan); }
+        .spareparts .section-label .dot { background: var(--cyan); }
+        .spareparts .section-title { color: white; }
+        .spareparts .section-subtitle { color: var(--gray-400); }
+        .spareparts-features { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 36px; }
+        .sparepart-feat {
+            display: flex; align-items: flex-start; gap: 12px;
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);
+            padding: 16px; border-radius: var(--radius-sm);
+        }
+        .sparepart-feat .icon {
+            width: 40px; height: 40px; min-width: 40px;
+            background: rgba(6,182,212,0.15); border-radius: 10px;
+            display: flex; align-items: center; justify-content: center; font-size: 18px;
+        }
+        .sparepart-feat h4 { color: white; font-size: 0.9rem; margin-bottom: 4px; }
+        .sparepart-feat p { color: var(--gray-400); font-size: 0.8rem; line-height: 1.5; }
+        .spareparts-image img {
+            width: 100%; border-radius: var(--radius); box-shadow: var(--shadow-lg);
+        }
+        .btn-cyan { background: var(--cyan); color: white; box-shadow: 0 4px 20px rgba(6,182,212,0.3); }
+        .btn-cyan:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(6,182,212,0.4); }
+
+        /* ── Home Sewing ── */
+        .home-sewing { padding: 100px 0; background: var(--gray-100); }
+        .home-header { text-align: center; margin-bottom: 64px; }
+        .home-header .section-subtitle { margin: 0 auto; }
+        .home-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+        .home-card {
+            background: white; border-radius: var(--radius); overflow: hidden;
+            border: 1px solid var(--gray-200); transition: all 0.4s;
+        }
+        .home-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); }
+        .home-card-img { width: 100%; height: 240px; object-fit: cover; }
+        .home-card-body { padding: 24px; }
+        .home-card-body h3 { font-family: 'Space Grotesk', sans-serif; font-size: 1.15rem; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+        .home-card-body p { color: var(--gray-500); font-size: 0.9rem; line-height: 1.6; margin-bottom: 16px; }
+        .home-card-price { display: flex; align-items: baseline; gap: 8px; margin-bottom: 16px; }
+        .home-card-price .from { font-size: 0.8rem; color: var(--gray-400); }
+        .home-card-price .price { font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; font-weight: 700; color: var(--accent); }
+        .btn-sm { padding: 10px 20px; font-size: 0.85rem; }
+
+        /* ── Why Choose Us ── */
+        .why { padding: 100px 0; background: var(--white); }
+        .why-header { text-align: center; margin-bottom: 64px; }
+        .why-header .section-subtitle { margin: 0 auto; }
+        .why-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; }
+        .why-card {
+            text-align: center; padding: 36px 24px; border-radius: var(--radius);
+            border: 1px solid var(--gray-200); transition: all 0.3s;
+        }
+        .why-card:hover { border-color: var(--accent); box-shadow: 0 8px 30px rgba(0,0,0,0.06); }
+        .why-icon {
+            width: 64px; height: 64px; margin: 0 auto 20px;
+            background: rgba(249,115,22,0.1); border-radius: 16px;
+            display: flex; align-items: center; justify-content: center; font-size: 28px;
+        }
+        .why-card h3 { font-family: 'Space Grotesk', sans-serif; font-size: 1.05rem; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+        .why-card p { color: var(--gray-500); font-size: 0.85rem; line-height: 1.6; }
+
+        /* ── CTA Banner ── */
+        .cta-banner {
+            padding: 80px 0;
+            background: linear-gradient(135deg, var(--accent), #ea580c);
+            position: relative; overflow: hidden;
+        }
+        .cta-banner::before {
+            content: ''; position: absolute; top: -50%; left: -20%;
+            width: 600px; height: 600px; border-radius: 50%;
+            background: rgba(255,255,255,0.08);
+        }
+        .cta-banner .container { text-align: center; position: relative; z-index: 2; }
+        .cta-banner h2 { font-family: 'Space Grotesk', sans-serif; font-size: 2.5rem; font-weight: 800; color: white; margin-bottom: 16px; }
+        .cta-banner p { color: rgba(255,255,255,0.85); font-size: 1.1rem; margin-bottom: 36px; max-width: 560px; margin-left: auto; margin-right: auto; }
+        .btn-white { background: white; color: var(--accent); font-weight: 700; }
+        .btn-white:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,0,0,0.2); }
+
+        /* ── Footer ── */
+        .footer { padding: 64px 0 32px; background: var(--navy); color: var(--gray-400); }
+        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 48px; }
+        .footer-brand .logo-text { color: white; margin-bottom: 12px; }
+        .footer-brand p { font-size: 0.9rem; line-height: 1.7; max-width: 320px; }
+        .footer h4 { color: white; font-size: 0.9rem; font-weight: 700; margin-bottom: 16px; }
+        .footer ul { list-style: none; }
+        .footer ul li { margin-bottom: 10px; }
+        .footer ul a { color: var(--gray-400); text-decoration: none; font-size: 0.85rem; transition: color 0.2s; }
+        .footer ul a:hover { color: var(--accent); }
+        .footer-bottom { border-top: 1px solid rgba(255,255,255,0.08); padding-top: 24px; display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; }
+        .footer-socials { display: flex; gap: 16px; }
+        .footer-socials a { color: var(--gray-400); font-size: 1.1rem; text-decoration: none; transition: color 0.2s; }
+        .footer-socials a:hover { color: var(--accent); }
+
+        /* ── Responsive ── */
+        @media (max-width: 1024px) {
+            .hero .container { grid-template-columns: 1fr; text-align: center; }
+            .hero-content p { margin: 0 auto 36px; }
+            .hero-buttons { justify-content: center; }
+            .hero-stats { justify-content: center; }
+            .hero-image { display: none; }
+            .spareparts .container { grid-template-columns: 1fr; }
+            .spareparts-image { display: none; }
+            .spareparts-features { grid-template-columns: 1fr; }
+            .why-grid { grid-template-columns: repeat(2, 1fr); }
+            .home-grid { grid-template-columns: repeat(2, 1fr); }
+            .footer-grid { grid-template-columns: 1fr 1fr; }
+        }
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .mobile-toggle { display: block; }
+            .machine-grid { grid-template-columns: 1fr; }
+            .home-grid { grid-template-columns: 1fr; }
+            .hero-stats { flex-direction: column; gap: 16px; align-items: center; }
+            .why-grid { grid-template-columns: 1fr; }
+            .footer-grid { grid-template-columns: 1fr; }
+            .cta-banner h2 { font-size: 1.8rem; }
+        }
+
+        /* ── Scroll Animations ── */
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+    </style>
+</head>
+<body>
+
+<!-- ═══════════ NAVBAR ═══════════ -->
+<nav class="navbar" id="navbar">
+    <div class="container">
+        <a href="#" class="logo">
+            <div class="logo-icon">S</div>
+            <div class="logo-text">Sew<span>Pro</span></div>
+        </a>
+        <ul class="nav-links">
+            <li><a href="#industrial">Industrial</a></li>
+            <li><a href="#spareparts">Spare Parts</a></li>
+            <li><a href="#home">Home Sewing</a></li>
+            <li><a href="#why">Why Us</a></li>
+            <li><a href="#contact" class="nav-cta">Get a Quote</a></li>
+        </ul>
+        <button class="mobile-toggle" id="mobileToggle" aria-label="Menu">
+            <span></span><span></span><span></span>
+        </button>
+    </div>
+</nav>
+
+<!-- ═══════════ HERO ═══════════ -->
+<section class="hero">
+    <div class="container">
+        <div class="hero-content">
+            <div class="section-label"><span class="dot"></span> Industrial & Home Solutions</div>
+            <h1>Precision <span class="highlight">Sewing Machines</span> for Every Workshop</h1>
+            <p>From industrial autocutters and plotters to home embroidery machines — we supply the full spectrum of sewing technology trusted by professionals worldwide.</p>
+            <div class="hero-buttons">
+                <a href="#industrial" class="btn btn-primary">Explore Machines →</a>
+                <a href="#contact" class="btn btn-outline">Request Demo</a>
+            </div>
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <h3>500+</h3>
+                    <p>Machines in Stock</p>
+                </div>
+                <div class="hero-stat">
+                    <h3>15+</h3>
+                    <p>Years Experience</p>
+                </div>
+                <div class="hero-stat">
+                    <h3>24/7</h3>
+                    <p>Technical Support</p>
+                </div>
+            </div>
+        </div>
+        <div class="hero-image">
+            <img src="https://images.pexels.com/photos/4614230/pexels-photo-4614230.jpeg?auto=compress&cs=tinysrgb&w=800"
+                 alt="Industrial sewing machine in professional workshop" loading="eager">
+            <div class="hero-badge">
+                <div class="hero-badge-icon">✓</div>
+                <div class="hero-badge-text">
+                    <strong>Certified Equipment</strong>
+                    <span>ISO 9001 Quality</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ TRUSTED ═══════════ -->
+<section class="trusted">
+    <div class="container">
+        <p>Trusted by leading garment manufacturers & tailoring studios</p>
+        <div class="trusted-logos">
+            <span>TEXTILECO</span>
+            <span>GARMENT PLUS</span>
+            <span>SEWMASTER</span>
+            <span>FABRIK PRO</span>
+            <span>THREADWORKS</span>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ INDUSTRIAL MACHINES ═══════════ -->
+<section class="industrial" id="industrial">
+    <div class="container">
+        <div class="industrial-header reveal">
+            <div class="section-label"><span class="dot"></span> Industrial Machinery</div>
+            <h2 class="section-title">Complete Production Line Solutions</h2>
+            <p class="section-subtitle">High-performance machines engineered for maximum throughput and stitch precision in garment factories and production facilities.</p>
+        </div>
+
+        <div class="machine-grid">
+            <!-- Index Plotter -->
+            <div class="machine-card reveal">
+                <div class="machine-card-img-wrap">
+                    <span class="machine-card-badge">CAD/CAM</span>
+                    <img class="machine-card-img"
+                         src="https://images.pexels.com/photos/5799370/pexels-photo-5799370.jpeg?auto=compress&cs=tinysrgb&w=800"
+                         alt="Drawing pattern machine index plotter">
+                </div>
+                <div class="machine-card-body">
+                    <h3>Drawing Pattern / Index Plotter</h3>
+                    <p>High-precision CAD plotters for digitizing and outputting garment patterns with pinpoint accuracy on large-format media.</p>
+                    <div class="machine-features">
+                        <span>📐 Precision Drawing</span>
+                        <span>🖥 CAD Compatible</span>
+                        <span>📏 Wide Format</span>
+                    </div>
+                    <a href="#contact" class="machine-card-link">Learn More →</a>
+                </div>
+            </div>
+
+            <!-- Spreading & Autocutter -->
+            <div class="machine-card reveal">
+                <div class="machine-card-img-wrap">
+                    <span class="machine-card-badge">AUTOMATION</span>
+                    <img class="machine-card-img"
+                         src="https://images.pexels.com/photos/5799431/pexels-photo-5799431.jpeg?auto=compress&cs=tinysrgb&w=800"
+                         alt="Spreading and automatic fabric cutting machine">
+                </div>
+                <div class="machine-card-body">
+                    <h3>Spreading & Auto Cutter</h3>
+                    <p>Automated fabric spreading and CNC cutting systems for multi-ply materials. Reduce waste, increase speed, perfect every cut.</p>
+                    <div class="machine-features">
+                        <span>✂️ CNC Precision</span>
+                        <span>📊 Multi-Ply</span>
+                        <span>⚡ High Speed</span>
+                    </div>
+                    <a href="#contact" class="machine-card-link">Learn More →</a>
+                </div>
+            </div>
+
+            <!-- End Cutter -->
+            <div class="machine-card reveal">
+                <div class="machine-card-img-wrap">
+                    <span class="machine-card-badge">CUTTING</span>
+                    <img class="machine-card-img"
+                         src="https://images.pexels.com/photos/5799413/pexels-photo-5799413.jpeg?auto=compress&cs=tinysrgb&w=800"
+                         alt="End cutting machine for fabric">
+                </div>
+                <div class="machine-card-body">
+                    <h3>End Cutter Machine</h3>
+                    <p>Precision end cutting for clean fabric edges in continuous production lines. Essential for consistent quality in bulk manufacturing.</p>
+                    <div class="machine-features">
+                        <span>🎯 Clean Edges</span>
+                        <span>🔄 Auto Feed</span>
+                        <span>💪 Heavy Duty</span>
+                    </div>
+                    <a href="#contact" class="machine-card-link">Learn More →</a>
+                </div>
+            </div>
+
+            <!-- Single Needle -->
+            <div class="machine-card reveal">
+                <div class="machine-card-img-wrap">
+                    <span class="machine-card-badge">SEWING</span>
+                    <img class="machine-card-img"
+                         src="https://images.pexels.com/photos/4614230/pexels-photo-4614230.jpeg?auto=compress&cs=tinysrgb&w=800"
+                         alt="Single needle lockstitch industrial sewing machine">
+                </div>
+                <div class="machine-card-body">
+                    <h3>Single Needle Lockstitch</h3>
+                    <p>Direct-drive industrial lockstitch machines with automatic thread trimmer, back tack, and presser foot lifter for high-volume stitching.</p>
+                    <div class="machine-features">
+                        <span>🧵 Lockstitch</span>
+                        <span>🔧 Auto Trim</span>
+                        <span>🚀 5000 SPM</span>
+                    </div>
+                    <a href="#contact" class="machine-card-link">Learn More →</a>
+                </div>
+            </div>
+
+            <!-- Overlock -->
+            <div class="machine-card reveal">
+                <div class="machine-card-img-wrap">
+                    <span class="machine-card-badge">FINISHING</span>
+                    <img class="machine-card-img"
+                         src="https://images.pexels.com/photos/6764235/pexels-photo-6764235.jpeg?auto=compress&cs=tinysrgb&w=800"
+                         alt="Overlock serger sewing machine">
+                </div>
+                <div class="machine-card-body">
+                    <h3>Overlock Machine</h3>
+                    <p>High-speed sergers for seam finishing, edge trimming, and overlocking in one pass. Available in 3, 4, and 5-thread configurations.</p>
+                    <div class="machine-features">
+                        <span>🧵 3/4/5 Thread</span>
+                        <span>✂️ Auto Trim</span>
+                        <span>⚡ 7000 SPM</span>
+                    </div>
+                    <a href="#contact" class="machine-card-link">Learn More →</a>
+                </div>
+            </div>
+
+            <!-- Interlock -->
+            <div class="machine-card reveal">
+                <div class="machine-card-img-wrap">
+                    <span class="machine-card-badge">KNITWEAR</span>
+                    <img class="machine-card-img"
+                         src="https://images.pexels.com/photos/3811855/pexels-photo-3811855.jpeg?auto=compress&cs=tinysrgb&w=800"
+                         alt="Interlock flatbed sewing machine">
+                </div>
+                <div class="machine-card-body">
+                    <h3>Interlock Machine</h3>
+                    <p>Flat-bed and cylinder-bed interlock machines for hemming t-shirts, cuffs, and knitwear. Clean coverstitch results every time.</p>
+                    <div class="machine-features">
+                        <span>👕 Coverstitch</span>
+                        <span>🔄 Flat/Cylinder</span>
+                        <span>📏 Adjustable</span>
+                    </div>
+                    <a href="#contact" class="machine-card-link">Learn More →</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ SPARE PARTS ═══════════ -->
+<section class="spareparts" id="spareparts">
+    <div class="container">
+        <div class="spareparts-content reveal">
+            <div class="section-label"><span class="dot"></span> Spare Parts & Accessories</div>
+            <h2 class="section-title">Genuine Parts. Zero Downtime.</h2>
+            <p class="section-subtitle">Keep your machines running at peak performance with our comprehensive inventory of OEM spare parts and accessories for all major brands.</p>
+            <div class="spareparts-features">
+                <div class="sparepart-feat">
+                    <div class="icon">🔧</div>
+                    <div>
+                        <h4>Needles & Hooks</h4>
+                        <p>All sizes for every machine type</p>
+                    </div>
+                </div>
+                <div class="sparepart-feat">
+                    <div class="icon">⚙️</div>
+                    <div>
+                        <h4>Bobbin Cases</h4>
+                        <p>Precision-wound bobbins & cases</p>
+                    </div>
+                </div>
+                <div class="sparepart-feat">
+                    <div class="icon">🔌</div>
+                    <div>
+                        <h4>Motor & Electronics</h4>
+                        <p>Direct-drive motors, boards, sensors</p>
+                    </div>
+                </div>
+                <div class="sparepart-feat">
+                    <div class="icon">🪡</div>
+                    <div>
+                        <h4>Presser Feet & Plates</h4>
+                        <p>Specialty feet for every application</p>
+                    </div>
+                </div>
+                <div class="sparepart-feat">
+                    <div class="icon">✂️</div>
+                    <div>
+                        <h4>Cutting Blades</h4>
+                        <p>OEM blades for autocutters & endcutters</p>
+                    </div>
+                </div>
+                <div class="sparepart-feat">
+                    <div class="icon">🧵</div>
+                    <div>
+                        <h4>Thread Tension Assemblies</h4>
+                        <p>Calibrated tension units & springs</p>
+                    </div>
+                </div>
+            </div>
+            <a href="#contact" class="btn btn-cyan" style="margin-top:32px;">Browse Parts Catalog →</a>
+        </div>
+        <div class="spareparts-image reveal">
+            <img src="https://images.pexels.com/photos/3811868/pexels-photo-3811868.jpeg?auto=compress&cs=tinysrgb&w=800"
+                 alt="Spare parts and accessories for sewing machines">
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ HOME SEWING ═══════════ -->
+<section class="home-sewing" id="home">
+    <div class="container">
+        <div class="home-header reveal">
+            <div class="section-label"><span class="dot"></span> Home & Hobby</div>
+            <h2 class="section-title">Sewing at Home, Perfected</h2>
+            <p class="section-subtitle">From beginner-friendly machines to advanced computerized models — find the perfect companion for your creative projects.</p>
+        </div>
+
+        <div class="home-grid">
+            <div class="home-card reveal">
+                <img class="home-card-img"
+                     src="https://images.pexels.com/photos/783590/pexels-photo-783590.jpeg?auto=compress&cs=tinysrgb&w=800"
+                     alt="Classic home sewing machine">
+                <div class="home-card-body">
+                    <h3>Classic Mechanical Machine</h3>
+                    <p>Reliable mechanical sewing machines perfect for beginners. Simple dials, sturdy build, and all the essential stitches you need.</p>
+                    <div class="home-card-price">
+                        <span class="from">From</span>
+                        <span class="price">$129</span>
+                    </div>
+                    <a href="#contact" class="btn btn-primary btn-sm">Shop Now</a>
+                </div>
+            </div>
+
+            <div class="home-card reveal">
+                <img class="home-card-img"
+                     src="https://images.pexels.com/photos/6461163/pexels-photo-6461163.jpeg?auto=compress&cs=tinysrgb&w=800"
+                     alt="Computerized home sewing machine">
+                <div class="home-card-body">
+                    <h3>Computerized Digital Machine</h3>
+                    <p>LCD display, 200+ built-in stitches, automatic needle threader, and one-step buttonhole. For serious home sewists.</p>
+                    <div class="home-card-price">
+                        <span class="from">From</span>
+                        <span class="price">$349</span>
+                    </div>
+                    <a href="#contact" class="btn btn-primary btn-sm">Shop Now</a>
+                </div>
+            </div>
+
+            <div class="home-card reveal">
+                <img class="home-card-img"
+                     src="https://images.pexels.com/photos/3738088/pexels-photo-3738088.jpeg?auto=compress&cs=tinysrgb&w=800"
+                     alt="Embroidery and quilting machine">
+                <div class="home-card-body">
+                    <h3>Embroidery & Quilting Combo</h3>
+                    <p>Large embroidery field, USB design import, 135+ embroidery patterns, and a wide extension table for quilting projects.</p>
+                    <div class="home-card-price">
+                        <span class="from">From</span>
+                        <span class="price">$699</span>
+                    </div>
+                    <a href="#contact" class="btn btn-primary btn-sm">Shop Now</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ WHY CHOOSE US ═══════════ -->
+<section class="why" id="why">
+    <div class="container">
+        <div class="why-header reveal">
+            <div class="section-label"><span class="dot"></span> Why SewPro</div>
+            <h2 class="section-title">Built on Trust, Driven by Quality</h2>
+            <p class="section-subtitle">We don't just sell machines — we partner with you to keep your production running smoothly, every single day.</p>
+        </div>
+
+        <div class="why-grid">
+            <div class="why-card reveal">
+                <div class="why-icon">🏭</div>
+                <h3>Factory-Direct Pricing</h3>
+                <p>Cut out the middleman. We source directly from top manufacturers to give you the best value.</p>
+            </div>
+            <div class="why-card reveal">
+                <div class="why-icon">🔧</div>
+                <h3>Expert Service Team</h3>
+                <p>Our certified technicians provide installation, training, and on-site maintenance for all equipment.</p>
+            </div>
+            <div class="why-card reveal">
+                <div class="why-icon">📦</div>
+                <h3>Same-Day Dispatch</h3>
+                <p>Most spare parts and accessories ship the same day from our regional warehouses.</p>
+            </div>
+            <div class="why-card reveal">
+                <div class="why-icon">🛡️</div>
+                <h3>2-Year Warranty</h3>
+                <p>Every machine comes with comprehensive warranty coverage and extended support options.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ CTA ═══════════ -->
+<section class="cta-banner" id="contact">
+    <div class="container">
+        <h2>Ready to Upgrade Your Workshop?</h2>
+        <p>Tell us what you need. Our team will recommend the right machines, quote pricing, and arrange delivery — all within 24 hours.</p>
+        <a href="mailto:sales@sewpro.com" class="btn btn-white">Request a Free Quote →</a>
+    </div>
+</section>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <div class="logo-text">Sew<span style="color:var(--accent)">Pro</span></div>
+                <p>Your trusted partner for industrial and home sewing solutions. Quality machines, genuine parts, expert support — since 2009.</p>
+            </div>
+            <div>
+                <h4>Industrial</h4>
+                <ul>
+                    <li><a href="#industrial">Index Plotters</a></li>
+                    <li><a href="#industrial">Auto Cutters</a></li>
+                    <li><a href="#industrial">End Cutters</a></li>
+                    <li><a href="#industrial">Single Needle</a></li>
+                    <li><a href="#industrial">Overlock</a></li>
+                    <li><a href="#industrial">Interlock</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4>Home Sewing</h4>
+                <ul>
+                    <li><a href="#home">Mechanical Machines</a></li>
+                    <li><a href="#home">Computerized</a></li>
+                    <li><a href="#home">Embroidery</a></li>
+                    <li><a href="#home">Quilting</a></li>
+                    <li><a href="#spareparts">Spare Parts</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Showroom</a></li>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                    <li><a href="#">Careers</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span>© 2026 SewPro. All rights reserved.</span>
+            <div class="footer-socials">
+                <a href="#" title="Facebook">f</a>
+                <a href="#" title="Instagram">ig</a>
+                <a href="#" title="YouTube">yt</a>
+                <a href="#" title="LinkedIn">in</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // Navbar scroll effect
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+        navbar.classList.toggle('scrolled', window.scrollY > 50);
+    });
+
+    // Scroll reveal
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Mobile toggle (simple)
+    document.getElementById('mobileToggle')?.addEventListener('click', () => {
+        document.querySelector('.nav-links').style.display =
+            document.querySelector('.nav-links').style.display === 'flex' ? 'none' : 'flex';
+    });
+</script>
+
+</body>
+</html>
