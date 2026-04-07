@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SewPro — Machine Catalog</title>
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0f172a; color: #e2e8f0; display: flex; height: 100vh; overflow: hidden; }
+
+        /* ── Sidebar ── */
+        .sidebar {
+            width: 320px; min-width: 320px; background: #1e293b; border-right: 1px solid #334155;
+            display: flex; flex-direction: column; overflow: hidden;
+        }
+        .sidebar-header {
+            padding: 20px 24px; border-bottom: 1px solid #334155;
+            display: flex; align-items: center; gap: 12px;
+        }
+        .sidebar-header .logo { width: 36px; height: 36px; background: #f97316; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 800; color: #fff; font-size: 18px; }
+        .sidebar-header h1 { font-size: 1.2rem; font-weight: 700; color: #f8fafc; }
+        .sidebar-header h1 span { color: #f97316; }
+
+        .sidebar-list { flex: 1; overflow-y: auto; padding: 12px; }
+        .sidebar-list::-webkit-scrollbar { width: 4px; }
+        .sidebar-list::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
+
+        .group-label {
+            font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em;
+            text-transform: uppercase; color: #64748b; padding: 16px 12px 6px;
+        }
+        .btn-item {
+            display: flex; align-items: center; gap: 12px; width: 100%;
+            padding: 12px 16px; background: transparent; border: none;
+            color: #94a3b8; font-size: 0.9rem; font-weight: 500;
+            border-radius: 10px; cursor: pointer; transition: all 0.2s;
+            text-align: left;
+        }
+        .btn-item:hover { background: #334155; color: #e2e8f0; }
+        .btn-item.active { background: #f97316; color: #fff; font-weight: 600; }
+        .btn-item .icon { font-size: 1.2rem; width: 28px; text-align: center; }
+
+        .btn-sub {
+            padding-left: 48px; font-size: 0.83rem; color: #64748b;
+        }
+        .btn-sub:hover { color: #e2e8f0; }
+        .btn-sub.active { background: rgba(249,115,22,0.15); color: #fb923c; }
+
+        /* ── Main ── */
+        .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+        .main-header {
+            padding: 20px 32px; border-bottom: 1px solid #1e293b;
+            background: #0f172a;
+        }
+        .main-header h2 { font-size: 1.5rem; font-weight: 700; color: #f8fafc; }
+        .main-header p { color: #64748b; font-size: 0.9rem; margin-top: 4px; }
+
+        .main-content { flex: 1; display: flex; align-items: center; justify-content: center; padding: 32px; overflow: auto; }
+
+        .image-panel {
+            max-width: 900px; width: 100%; background: #1e293b; border-radius: 16px;
+            overflow: hidden; border: 1px solid #334155;
+            animation: fadeUp 0.3s ease;
+        }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .image-panel img {
+            width: 100%; max-height: 500px; object-fit: cover; display: block;
+        }
+        .image-panel .info { padding: 24px 28px; }
+        .image-panel .info h3 { font-size: 1.3rem; font-weight: 700; color: #f8fafc; margin-bottom: 8px; }
+        .image-panel .info p { color: #94a3b8; font-size: 0.95rem; line-height: 1.6; }
+        .image-panel .specs { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+        .image-panel .specs span {
+            background: #334155; color: #e2e8f0; padding: 5px 14px;
+            border-radius: 50px; font-size: 0.8rem; font-weight: 500;
+        }
+
+        .placeholder {
+            text-align: center; color: #475569;
+        }
+        .placeholder .big-icon { font-size: 4rem; margin-bottom: 16px; }
+        .placeholder p { font-size: 1.1rem; }
+
+        /* responsive */
+        @media (max-width: 768px) {
+            .sidebar { width: 260px; min-width: 260px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ═══ SIDEBAR ═══ -->
+<aside class="sidebar">
+    <div class="sidebar-header">
+        <div class="logo">S</div>
+        <h1>Sew<span>Pro</span></h1>
+    </div>
+    <div class="sidebar-list">
+        <div class="group-label">📐 CAD / CAM</div>
+        <button class="btn-item" onclick="show('plotter')">
+            <span class="icon">📐</span> Index Plotter / Pattern Drawing
+        </button>
+
+        <div class="group-label">🏭 Cutting</div>
+        <button class="btn-item" onclick="show('spreading')">
+            <span class="icon">📏</span> Spreading Machine
+        </button>
+        <button class="btn-item" onclick="show('autocutter')">
+            <span class="icon">✂️</span> Auto Cutter
+        </button>
+        <button class="btn-item" onclick="show('endcutter')">
+            <span class="icon">🔪</span> End Cutter
+        </button>
+
+        <div class="group-label">🧵 Sewing Machine</div>
+        <button class="btn-item" onclick="show('single-needle')">
+            <span class="icon">🧵</span> High Speed Single Needle
+        </button>
+
+        <div class="group-label">🔄 Overlock</div>
+        <button class="btn-item btn-sub" onclick="show('overlock-4t')">
+            4 Thread Overlock
+        </button>
+        <button class="btn-item btn-sub" onclick="show('overlock-5t')">
+            5 Thread Overlock
+        </button>
+
+        <div class="group-label">👕 Interlock</div>
+        <button class="btn-item btn-sub" onclick="show('interlock-flat')">
+            Flatbed Interlock
+        </button>
+        <button class="btn-item btn-sub" onclick="show('interlock-cylinder')">
+            Cylinder Bed Interlock
+        </button>
+
+        <div class="group-label">⚙️ Special Machines</div>
+        <button class="btn-item btn-sub" onclick="show('buttonholer')">
+            Button Holer
+        </button>
+        <button class="btn-item btn-sub" onclick="show('button-attach')">
+            Button Attaching
+        </button>
+        <button class="btn-item btn-sub" onclick="show('bartack')">
+            Bartack Machine
+        </button>
+        <button class="btn-item btn-sub" onclick="show('keyhole')">
+            Keyhole Button Holer
+        </button>
+    </div>
+</aside>
+
+<!-- ═══ MAIN ═══ -->
+<main class="main">
+    <div class="main-header">
+        <h2 id="title">Machine Catalog</h2>
+        <p id="subtitle">Select a machine from the left panel to view details</p>
+    </div>
+    <div class="main-content" id="content">
+        <div class="placeholder">
+            <div class="big-icon">🏭</div>
+            <p>Click a machine to view it here</p>
+        </div>
+    </div>
+</main>
+
+<script>
+const machines = {
+    plotter: {
+        title: 'Index Plotter / Pattern Drawing Machine',
+        subtitle: 'CAD/CAM Pattern Output',
+        img: 'https://images.pexels.com/photos/5799370/pexels-photo-5799370.jpeg?auto=compress&cs=tinysrgb&w=1200',
+        desc: 'High-precision pen/plotters for outputting garment patterns from CAD software. Supports HPGL, DXF formats with continuous paper feed for large-scale production.',
+        specs: ['Wide Format', 'HPGL/DXF', 'Auto Feed', '±0.5mm Accuracy']
+    },
+    spreading: {
+        title: 'Fabric Spreading Machine',
+        subtitle: 'Automated Material Handling',
+        img: 'https://images.pexels.com/photos/5799431/pexels-photo-5799431.jpeg?auto=compress&cs=tinysrgb&w=1200',
+        desc: 'Automatic fabric spreading machines for laying up multiple plies with consistent tension and edge alignment. Reduces manual labor and material waste.',
+        specs: ['Auto Spread', 'Tension Control', 'Edge Alignment', 'Ply Counter']
+    },
+    autocutter: {
+        title: 'Automatic CNC Cutter',
+        subtitle: 'Precision Cutting System',
+        img: 'https://images.pexels.com/photos/5799413/pexels-photo-5799413.jpeg?auto=compress&cs=tinysrgb&w=1200',
+        desc: 'Computer-controlled cutting systems for multi-ply fabric layers. Knife, laser, or ultrasonic cutting options with automatic nesting for minimal waste.',
+        specs: ['CNC Control', 'Multi-Ply', 'Nesting Software', 'Knife/Laser']
+    },
+    endcutter: {
+        title: 'End Cutter Machine',
+        subtitle: 'Clean Edge Finishing',
+        img: 'https://images.pexels.com/photos/5799413/pexels-photo-5799413.jpeg?auto=compress&cs=tinysrgb&w=1200',
+        desc: 'Precision end cutting for trimming fabric rolls and panels to exact lengths in continuous production lines.',
+        specs: ['Precision Cut', 'Auto Feed', 'Roll Compatible', 'Heavy Duty']
+    },
+    'single-needle': {
+        title: 'High Speed Single Needle Lockstitch',
+        subtitle: 'Direct-Drive Industrial Sewing',
+        img: 'https://images.pexels.com/photos/4614230/pexels-photo-4614230.jpeg?auto=compress&cs=tinysrgb&w=1200',
+        desc: 'Direct-drive lockstitch with automatic thread trimmer, back tack, and presser foot lifter. The workhorse of any garment factory.',
+        specs: ['5000 SPM', 'Auto Trim', 'Direct Drive', 'LED Light']
+    },
+    'overlock-4t': {
+        title: '4 Thread Overlock Machine',
+        subtitle: 'Seam & Edge Finishing',
+        img: 'https://images.pexels.com/photos/6764235/pexels-photo-6764235.jpeg?auto=compress&cs=tinysrgb&w=1200',
+        desc: 'High-speed 4-thread overlock for simultaneous seam joining and edge finishing. Ideal for knit and woven fabrics.',
+        specs: ['7000 SPM', '4 Thread', 'Differential Feed', 'Auto Lubrication']
+    },
+    'overlock-5t': {
+        title: '5 Thread Overlock Machine',
+        subtitle: 'Safety Stitch System',
+        img: 'https://images.pexels.com/photos/6764235/pexels-photo-6764235.jpeg?auto=compress&cs=tinysrgb&w=1200',
+        desc: '5-thread overlock combining a chainstitch with overlock for a safety stitch in a single pass. Premium finishing for high-end garments.',
+        specs: ['7000 SPM', '5 Thread', 'Safety Stitch', 'Chain + Overlock']
+    },
+    'interlock-flat': {
+        title: 'Flatbed Interlock Machine',
+        subtitle: 'Coverstitch Hemming',
+        img: 'https://images.pexels.com/photos/3811855/pexels-photo-3811855.jpeg?auto=compress&cs=tinysrgb&w=1200',
+        desc: 'Flat-bed coverstitch and interlock for hemming t-shirts, sleeves, and bottom hems on knitwear.',
+        specs: ['Coverstitch', 'Flat Bed', '2/3 Needle', '6000 SPM']
+    },
+    'interlock-cylinder': {
+        title: 'Cylinder Bed Interlock Machine',
+        subtitle: 'Cuffs & Collars',
+        img: 'https://images.pexels.com/photos/3811855/pexels-photo-3811855.jpeg?auto=compress&cs=tinysrgb&w=1200',
+        desc: 'Cylinder-bed interlock for sewing cuffs, waistbands, and circular seams on tubular garments.',
+        specs: ['Cylinder Bed', 'Tubular Work', 'Coverstitch', 'Adjustable']
+    },
+    buttonholer: {
+        title: 'Button Holer Machine',
+        subtitle: 'Automatic Buttonhole',
+        img: 'https://images.pexels.com/photos/5799370/pexels-photo-5799370.jpeg?auto=compress&cs=tinysrgb&w=1200',
+        desc: 'Programmable automatic buttonhole machines with consistent eye size and stitch density. Supports eyelet and straight buttonholes.',
+        specs: ['Auto Program', 'Eyelet/Straight', 'Consistent Size', 'High Speed']
+    },
+    'button-attach': {
+        title: 'Button Attaching Machine',
+        subtitle: 'Automatic Sew-On',
+        img: 'https://images.pexels.com/photos/5799370/pexels-photo-5799370.jpeg?auto=compress&cs=tinysrgb&w=1200',
+        desc: 'Automatic button sewing machines that attach flat and shank buttons with programmable stitch patterns.',
+        specs: ['Flat/Shank', 'Auto Feed', 'Cross/Zigzag', 'Programmable']
+    },
+    bartack: {
+        title: 'Bartack Machine',
+        subtitle: 'Reinforcement Stitching',
+        img: 'https://images.pexels.com/photos/4614230/pexels-photo-4614230.jpeg?auto=compress&cs=tinysrgb&w=1200',
+        desc: 'High-speed bartack machines for reinforcing stress points at pocket corners, belt loops, and seam ends.',
+        specs: ['Reinforcement', '27-42 Stitches', 'Auto Trim', 'Jig Pattern']
+    },
+    keyhole: {
+        title: 'Keyhole Button Holer',
+        subtitle: 'Eyelet Buttonhole',
+        img: 'https://images.pexels.com/photos/5799370/pexels-photo-5799370.jpeg?auto=compress&cs=tinysrgb&w=1200',
+        desc: 'Keyhole buttonhole machines producing rounded-end buttonholes for heavy fabrics, jeans, and outerwear.',
+        specs: ['Keyhole Cut', 'Heavy Fabric', 'Jeans/Denim', 'Auto Clamp']
+    }
+};
+
+function show(id) {
+    const m = machines[id];
+    if (!m) return;
+
+    // Update active button
+    document.querySelectorAll('.btn-item').forEach(b => b.classList.remove('active'));
+    event.currentTarget.classList.add('active');
+
+    // Update header
+    document.getElementById('title').textContent = m.title;
+    document.getElementById('subtitle').textContent = m.subtitle;
+
+    // Update content
+    document.getElementById('content').innerHTML = `
+        <div class="image-panel">
+            <img src="${m.img}" alt="${m.title}" loading="lazy">
+            <div class="info">
+                <h3>${m.title}</h3>
+                <p>${m.desc}</p>
+                <div class="specs">
+                    ${m.specs.map(s => `<span>${s}</span>`).join('')}
+                </div>
+            </div>
+        </div>
+    `;
+}
+</script>
+
+</body>
+</html>

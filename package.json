@@ -1,0 +1,23 @@
+{
+  "name": "sewing-landing",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js",
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thomaskeren90/sewing-landing.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/thomaskeren90/sewing-landing/issues"
+  },
+  "homepage": "https://github.com/thomaskeren90/sewing-landing#readme",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
