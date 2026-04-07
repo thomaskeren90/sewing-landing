@@ -85,6 +85,27 @@
         .placeholder { text-align: center; color: #475569; }
         .placeholder .big-icon { font-size: 4rem; margin-bottom: 16px; }
 
+        /* ── Thumbnail Grid ── */
+        .thumb-grid {
+            width: 100%; max-width: 1100px;
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px; padding: 4px;
+        }
+        .thumb-card {
+            background: #1e293b; border-radius: 12px; overflow: hidden;
+            border: 1px solid #334155; cursor: pointer; transition: all 0.2s;
+        }
+        .thumb-card:hover { border-color: #f97316; transform: translateY(-4px); box-shadow: 0 8px 24px rgba(249,115,22,0.15); }
+        .thumb-card img { width: 100%; height: 140px; object-fit: cover; display: block; }
+        .thumb-card .thumb-label { padding: 10px 12px; font-size: 0.82rem; font-weight: 600; color: #e2e8f0; text-align: center; }
+        .thumb-card .thumb-icon { font-size: 1.4rem; display: block; margin-bottom: 4px; }
+        .back-btn {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 8px 16px; background: #334155; border: none; border-radius: 8px;
+            color: #94a3b8; font-size: 0.85rem; cursor: pointer; margin-bottom: 16px; transition: all 0.2s;
+        }
+        .back-btn:hover { background: #475569; color: #e2e8f0; }
+
         @media (max-width: 768px) {
             .sidebar { width: 260px; min-width: 260px; }
         }
@@ -114,12 +135,7 @@
         <h2 id="title">Machine Catalog</h2>
         <p id="subtitle">Select a machine from the left panel to view details</p>
     </div>
-    <div class="main-content" id="content">
-        <div class="placeholder">
-            <div class="big-icon">🏭</div>
-            <p id="placeholder-text">Click a machine to view it here</p>
-        </div>
-    </div>
+    <div class="main-content" id="content"></div>
 </main>
 
 <script>
@@ -496,6 +512,24 @@ const sidebarOrder = [
 // ═══════════════════════════════════════
 // RENDER
 // ═══════════════════════════════════════
+const allMachineIds = ['plotter','spreading','autocutter','endcutter','single-needle','overlock-4t','overlock-5t','interlock-flat','interlock-cylinder','buttonholer','button-attach','bartack','keyhole'];
+
+function renderGrid() {
+    const lang = t[currentLang];
+    let html = '<div class="thumb-grid">';
+    allMachineIds.forEach(id => {
+        const m = lang.machines[id];
+        const icon = icons[id] || '🔧';
+        html += `
+            <div class="thumb-card" onclick="show('${id}')">
+                <img src="${images[id]}" alt="${m.label}" loading="lazy">
+                <div class="thumb-label"><span class="thumb-icon">${icon}</span>${m.label}</div>
+            </div>`;
+    });
+    html += '</div>';
+    document.getElementById('content').innerHTML = html;
+}
+
 function renderSidebar() {
     const lang = t[currentLang];
     const sidebar = document.getElementById('sidebar');
@@ -529,6 +563,7 @@ function show(id) {
 
     document.getElementById('content').innerHTML = `
         <div class="image-panel">
+            <button class="back-btn" onclick="backToGrid()">← Back to catalog</button>
             <img src="${images[id]}" alt="${m.title}" loading="lazy">
             <div class="info">
                 <h3>${m.title}</h3>
@@ -539,6 +574,14 @@ function show(id) {
             </div>
         </div>
     `;
+}
+
+function backToGrid() {
+    currentMachine = null;
+    renderSidebar();
+    document.getElementById('title').textContent = 'Machine Catalog';
+    document.getElementById('subtitle').textContent = t[currentLang].selectPrompt;
+    renderGrid();
 }
 
 function setLang(lang) {
@@ -552,17 +595,18 @@ function setLang(lang) {
 
     renderSidebar();
 
-    // If a machine is selected, re-render it
     if (currentMachine) {
         show(currentMachine);
     } else {
         document.getElementById('title').textContent = 'Machine Catalog';
         document.getElementById('subtitle').textContent = t[lang].selectPrompt;
+        renderGrid();
     }
 }
 
 // Initial render
 renderSidebar();
+renderGrid();
 </script>
 
 </body>
