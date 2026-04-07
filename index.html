@@ -8,10 +8,25 @@
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0f172a; color: #e2e8f0; display: flex; height: 100vh; overflow: hidden; }
 
+        /* ── Language Switcher ── */
+        .lang-bar {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            background: #1e293b; border-bottom: 1px solid #334155;
+            display: flex; align-items: center; justify-content: flex-end;
+            padding: 8px 24px; gap: 8px;
+        }
+        .lang-btn {
+            padding: 6px 16px; border-radius: 6px; border: 1px solid #475569;
+            background: transparent; color: #94a3b8; font-size: 0.8rem;
+            font-weight: 600; cursor: pointer; transition: all 0.2s;
+        }
+        .lang-btn:hover { border-color: #f97316; color: #e2e8f0; }
+        .lang-btn.active { background: #f97316; color: white; border-color: #f97316; }
+
         /* ── Sidebar ── */
         .sidebar {
             width: 320px; min-width: 320px; background: #1e293b; border-right: 1px solid #334155;
-            display: flex; flex-direction: column; overflow: hidden;
+            display: flex; flex-direction: column; overflow: hidden; margin-top: 44px;
         }
         .sidebar-header {
             padding: 20px 24px; border-bottom: 1px solid #334155;
@@ -39,18 +54,14 @@
         .btn-item:hover { background: #334155; color: #e2e8f0; }
         .btn-item.active { background: #f97316; color: #fff; font-weight: 600; }
         .btn-item .icon { font-size: 1.2rem; width: 28px; text-align: center; }
-
-        .btn-sub {
-            padding-left: 48px; font-size: 0.83rem; color: #64748b;
-        }
+        .btn-sub { padding-left: 48px; font-size: 0.83rem; color: #64748b; }
         .btn-sub:hover { color: #e2e8f0; }
         .btn-sub.active { background: rgba(249,115,22,0.15); color: #fb923c; }
 
         /* ── Main ── */
-        .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+        .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; margin-top: 44px; }
         .main-header {
-            padding: 20px 32px; border-bottom: 1px solid #1e293b;
-            background: #0f172a;
+            padding: 20px 32px; border-bottom: 1px solid #1e293b; background: #0f172a;
         }
         .main-header h2 { font-size: 1.5rem; font-weight: 700; color: #f8fafc; }
         .main-header p { color: #64748b; font-size: 0.9rem; margin-top: 4px; }
@@ -59,16 +70,10 @@
 
         .image-panel {
             max-width: 900px; width: 100%; background: #1e293b; border-radius: 16px;
-            overflow: hidden; border: 1px solid #334155;
-            animation: fadeUp 0.3s ease;
+            overflow: hidden; border: 1px solid #334155; animation: fadeUp 0.3s ease;
         }
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(16px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .image-panel img {
-            width: 100%; max-height: 500px; object-fit: cover; display: block;
-        }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+        .image-panel img { width: 100%; max-height: 500px; object-fit: cover; display: block; }
         .image-panel .info { padding: 24px 28px; }
         .image-panel .info h3 { font-size: 1.3rem; font-weight: 700; color: #f8fafc; margin-bottom: 8px; }
         .image-panel .info p { color: #94a3b8; font-size: 0.95rem; line-height: 1.6; }
@@ -77,14 +82,9 @@
             background: #334155; color: #e2e8f0; padding: 5px 14px;
             border-radius: 50px; font-size: 0.8rem; font-weight: 500;
         }
-
-        .placeholder {
-            text-align: center; color: #475569;
-        }
+        .placeholder { text-align: center; color: #475569; }
         .placeholder .big-icon { font-size: 4rem; margin-bottom: 16px; }
-        .placeholder p { font-size: 1.1rem; }
 
-        /* responsive */
         @media (max-width: 768px) {
             .sidebar { width: 260px; min-width: 260px; }
         }
@@ -92,64 +92,20 @@
 </head>
 <body>
 
+<!-- ═══ LANGUAGE BAR ═══ -->
+<div class="lang-bar">
+    <button class="lang-btn active" onclick="setLang('en')">🇬🇧 English</button>
+    <button class="lang-btn" onclick="setLang('id')">🇮🇩 Indonesia</button>
+    <button class="lang-btn" onclick="setLang('zh')">🇨🇳 中文</button>
+</div>
+
 <!-- ═══ SIDEBAR ═══ -->
 <aside class="sidebar">
     <div class="sidebar-header">
         <div class="logo">S</div>
         <h1>Sew<span>Pro</span></h1>
     </div>
-    <div class="sidebar-list">
-        <div class="group-label">📐 CAD / CAM</div>
-        <button class="btn-item" onclick="show('plotter')">
-            <span class="icon">📐</span> Index Plotter / Pattern Drawing
-        </button>
-
-        <div class="group-label">🏭 Cutting</div>
-        <button class="btn-item" onclick="show('spreading')">
-            <span class="icon">📏</span> Spreading Machine
-        </button>
-        <button class="btn-item" onclick="show('autocutter')">
-            <span class="icon">✂️</span> Auto Cutter
-        </button>
-        <button class="btn-item" onclick="show('endcutter')">
-            <span class="icon">🔪</span> End Cutter
-        </button>
-
-        <div class="group-label">🧵 Sewing Machine</div>
-        <button class="btn-item" onclick="show('single-needle')">
-            <span class="icon">🧵</span> High Speed Single Needle
-        </button>
-
-        <div class="group-label">🔄 Overlock</div>
-        <button class="btn-item btn-sub" onclick="show('overlock-4t')">
-            4 Thread Overlock
-        </button>
-        <button class="btn-item btn-sub" onclick="show('overlock-5t')">
-            5 Thread Overlock
-        </button>
-
-        <div class="group-label">👕 Interlock</div>
-        <button class="btn-item btn-sub" onclick="show('interlock-flat')">
-            Flatbed Interlock
-        </button>
-        <button class="btn-item btn-sub" onclick="show('interlock-cylinder')">
-            Cylinder Bed Interlock
-        </button>
-
-        <div class="group-label">⚙️ Special Machines</div>
-        <button class="btn-item btn-sub" onclick="show('buttonholer')">
-            Button Holer
-        </button>
-        <button class="btn-item btn-sub" onclick="show('button-attach')">
-            Button Attaching
-        </button>
-        <button class="btn-item btn-sub" onclick="show('bartack')">
-            Bartack Machine
-        </button>
-        <button class="btn-item btn-sub" onclick="show('keyhole')">
-            Keyhole Button Holer
-        </button>
-    </div>
+    <div class="sidebar-list" id="sidebar"></div>
 </aside>
 
 <!-- ═══ MAIN ═══ -->
@@ -161,122 +117,419 @@
     <div class="main-content" id="content">
         <div class="placeholder">
             <div class="big-icon">🏭</div>
-            <p>Click a machine to view it here</p>
+            <p id="placeholder-text">Click a machine to view it here</p>
         </div>
     </div>
 </main>
 
 <script>
-const machines = {
-    plotter: {
-        title: 'Index Plotter / Pattern Drawing Machine',
-        subtitle: 'CAD/CAM Pattern Output',
-        img: 'https://images.pexels.com/photos/5799370/pexels-photo-5799370.jpeg?auto=compress&cs=tinysrgb&w=1200',
-        desc: 'High-precision pen/plotters for outputting garment patterns from CAD software. Supports HPGL, DXF formats with continuous paper feed for large-scale production.',
-        specs: ['Wide Format', 'HPGL/DXF', 'Auto Feed', '±0.5mm Accuracy']
+// ═══════════════════════════════════════
+// TRANSLATIONS — 3 LANGUAGES
+// ═══════════════════════════════════════
+const t = {
+    en: {
+        groups: {
+            cadcam: '📐 CAD / CAM',
+            cutting: '🏭 Cutting',
+            sewing: '🧵 Sewing Machine',
+            overlock: '🔄 Overlock',
+            interlock: '👕 Interlock',
+            special: '⚙️ Special Machines'
+        },
+        selectPrompt: 'Select a machine from the left panel to view details',
+        clickPrompt: 'Click a machine to view it here',
+        machines: {
+            plotter: {
+                label: 'Index Plotter / Pattern Drawing',
+                title: 'Index Plotter / Pattern Drawing Machine',
+                subtitle: 'CAD/CAM Pattern Output',
+                desc: 'High-precision pen/plotters for outputting garment patterns from CAD software. Supports HPGL, DXF formats with continuous paper feed for large-scale production.',
+                specs: ['Wide Format', 'HPGL/DXF', 'Auto Feed', '±0.5mm Accuracy']
+            },
+            spreading: {
+                label: 'Spreading Machine',
+                title: 'Fabric Spreading Machine',
+                subtitle: 'Automated Material Handling',
+                desc: 'Automatic fabric spreading machines for laying up multiple plies with consistent tension and edge alignment. Reduces manual labor and material waste.',
+                specs: ['Auto Spread', 'Tension Control', 'Edge Alignment', 'Ply Counter']
+            },
+            autocutter: {
+                label: 'Auto Cutter',
+                title: 'Automatic CNC Cutter',
+                subtitle: 'Precision Cutting System',
+                desc: 'Computer-controlled cutting systems for multi-ply fabric layers. Knife, laser, or ultrasonic cutting options with automatic nesting for minimal waste.',
+                specs: ['CNC Control', 'Multi-Ply', 'Nesting Software', 'Knife/Laser']
+            },
+            endcutter: {
+                label: 'End Cutter',
+                title: 'End Cutter Machine',
+                subtitle: 'Clean Edge Finishing',
+                desc: 'Precision end cutting for trimming fabric rolls and panels to exact lengths in continuous production lines.',
+                specs: ['Precision Cut', 'Auto Feed', 'Roll Compatible', 'Heavy Duty']
+            },
+            'single-needle': {
+                label: 'High Speed Single Needle',
+                title: 'High Speed Single Needle Lockstitch',
+                subtitle: 'Direct-Drive Industrial Sewing',
+                desc: 'Direct-drive lockstitch with automatic thread trimmer, back tack, and presser foot lifter. The workhorse of any garment factory.',
+                specs: ['5000 SPM', 'Auto Trim', 'Direct Drive', 'LED Light']
+            },
+            'overlock-4t': {
+                label: '4 Thread Overlock',
+                title: '4 Thread Overlock Machine',
+                subtitle: 'Seam & Edge Finishing',
+                desc: 'High-speed 4-thread overlock for simultaneous seam joining and edge finishing. Ideal for knit and woven fabrics.',
+                specs: ['7000 SPM', '4 Thread', 'Differential Feed', 'Auto Lubrication']
+            },
+            'overlock-5t': {
+                label: '5 Thread Overlock',
+                title: '5 Thread Overlock Machine',
+                subtitle: 'Safety Stitch System',
+                desc: '5-thread overlock combining a chainstitch with overlock for a safety stitch in a single pass. Premium finishing for high-end garments.',
+                specs: ['7000 SPM', '5 Thread', 'Safety Stitch', 'Chain + Overlock']
+            },
+            'interlock-flat': {
+                label: 'Flatbed Interlock',
+                title: 'Flatbed Interlock Machine',
+                subtitle: 'Coverstitch Hemming',
+                desc: 'Flat-bed coverstitch and interlock for hemming t-shirts, sleeves, and bottom hems on knitwear.',
+                specs: ['Coverstitch', 'Flat Bed', '2/3 Needle', '6000 SPM']
+            },
+            'interlock-cylinder': {
+                label: 'Cylinder Bed Interlock',
+                title: 'Cylinder Bed Interlock Machine',
+                subtitle: 'Cuffs & Collars',
+                desc: 'Cylinder-bed interlock for sewing cuffs, waistbands, and circular seams on tubular garments.',
+                specs: ['Cylinder Bed', 'Tubular Work', 'Coverstitch', 'Adjustable']
+            },
+            buttonholer: {
+                label: 'Button Holer',
+                title: 'Button Holer Machine',
+                subtitle: 'Automatic Buttonhole',
+                desc: 'Programmable automatic buttonhole machines with consistent eye size and stitch density. Supports eyelet and straight buttonholes.',
+                specs: ['Auto Program', 'Eyelet/Straight', 'Consistent Size', 'High Speed']
+            },
+            'button-attach': {
+                label: 'Button Attaching',
+                title: 'Button Attaching Machine',
+                subtitle: 'Automatic Sew-On',
+                desc: 'Automatic button sewing machines that attach flat and shank buttons with programmable stitch patterns.',
+                specs: ['Flat/Shank', 'Auto Feed', 'Cross/Zigzag', 'Programmable']
+            },
+            bartack: {
+                label: 'Bartack Machine',
+                title: 'Bartack Machine',
+                subtitle: 'Reinforcement Stitching',
+                desc: 'High-speed bartack machines for reinforcing stress points at pocket corners, belt loops, and seam ends.',
+                specs: ['Reinforcement', '27-42 Stitches', 'Auto Trim', 'Jig Pattern']
+            },
+            keyhole: {
+                label: 'Keyhole Button Holer',
+                title: 'Keyhole Button Holer',
+                subtitle: 'Eyelet Buttonhole',
+                desc: 'Keyhole buttonhole machines producing rounded-end buttonholes for heavy fabrics, jeans, and outerwear.',
+                specs: ['Keyhole Cut', 'Heavy Fabric', 'Jeans/Denim', 'Auto Clamp']
+            }
+        }
     },
-    spreading: {
-        title: 'Fabric Spreading Machine',
-        subtitle: 'Automated Material Handling',
-        img: 'https://images.pexels.com/photos/5799431/pexels-photo-5799431.jpeg?auto=compress&cs=tinysrgb&w=1200',
-        desc: 'Automatic fabric spreading machines for laying up multiple plies with consistent tension and edge alignment. Reduces manual labor and material waste.',
-        specs: ['Auto Spread', 'Tension Control', 'Edge Alignment', 'Ply Counter']
+
+    id: {
+        groups: {
+            cadcam: '📐 CAD / CAM',
+            cutting: '🏭 Pemotongan',
+            sewing: '🧵 Mesin Jahit',
+            overlock: '🔄 Mesin Obras',
+            interlock: '👕 Mesin Interlock',
+            special: '⚙️ Mesin Khusus'
+        },
+        selectPrompt: 'Pilih mesin dari panel kiri untuk melihat detail',
+        clickPrompt: 'Klik mesin untuk melihat di sini',
+        machines: {
+            plotter: {
+                label: 'Plotter Pola / Gambar Pola',
+                title: 'Mesin Plotter Pola / Gambar Pola',
+                subtitle: 'Output Pola CAD/CAM',
+                desc: 'Plotter pena presisi tinggi untuk mencetak pola pakaian dari perangkat lunak CAD. Mendukung format HPGL, DXF dengan umpan kertas berkelanjutan untuk produksi skala besar.',
+                specs: ['Format Lebar', 'HPGL/DXF', 'Otomatis', 'Akurasi ±0.5mm']
+            },
+            spreading: {
+                label: 'Mesin Penyebar Kain',
+                title: 'Mesin Penyebar Kain Otomatis',
+                subtitle: 'Penanganan Material Otomatis',
+                desc: 'Mesin penyebar kain otomatis untuk melapisi beberapa lapisan dengan tegangan dan perataan tepi yang konsisten. Mengurangi kerja manual dan limbah material.',
+                specs: ['Sebar Otomatis', 'Kontrol Tegangan', 'Perataan Tepi', 'Hitung Lapis']
+            },
+            autocutter: {
+                label: 'Pemotong Otomatis',
+                title: 'Mesin Pemotong CNC Otomatis',
+                subtitle: 'Sistem Pemotongan Presisi',
+                desc: 'Sistem pemotongan terkomputerisasi untuk lapisan kain multi-ply. Opsi pisau, laser, atau ultrasonik dengan nesting otomatis untuk limbah minimal.',
+                specs: ['Kontrol CNC', 'Multi-Lapis', 'Software Nesting', 'Pisau/Laser']
+            },
+            endcutter: {
+                label: 'Pemotong Ujung',
+                title: 'Mesin Pemotong Ujung',
+                subtitle: 'Finishing Tepi Bersih',
+                desc: 'Pemotongan ujung presisi untuk memotong gulungan dan panel kain ke panjang yang tepat dalam lini produksi berkelanjutan.',
+                specs: ['Potong Presisi', 'Otomatis', 'Gulungan', 'Tugas Berat']
+            },
+            'single-needle': {
+                label: 'Jarum Tunggal Kecepatan Tinggi',
+                title: 'Mesin Jahit Jarum Tunggal Kecepatan Tinggi',
+                subtitle: 'Jahit Industri Direct-Drive',
+                desc: 'Mesin lockstitch direct-drive dengan pemotong benang otomatis, back tack, dan pengangkat presser foot. Andalan setiap pabrik garmen.',
+                specs: ['5000 SPM', 'Potong Otomatis', 'Direct Drive', 'Lampu LED']
+            },
+            'overlock-4t': {
+                label: 'Obras 4 Benang',
+                title: 'Mesin Obras 4 Benang',
+                subtitle: 'Finishing Jahitan & Tepi',
+                desc: 'Obras 4 benang berkecepatan tinggi untuk menyambung jahitan dan finishing tepi secara bersamaan. Ideal untuk kain rajut dan tenun.',
+                specs: ['7000 SPM', '4 Benang', 'Feed Diferensial', 'Pelumasan Otomatis']
+            },
+            'overlock-5t': {
+                label: 'Obras 5 Benang',
+                title: 'Mesin Obras 5 Benang',
+                subtitle: 'Sistem Jahitan Safety',
+                desc: 'Obras 5 benang menggabungkan chainstitch dengan obras untuk jahitan safety dalam satu kali proses. Finishing premium untuk garmen berkualitas tinggi.',
+                specs: ['7000 SPM', '5 Benang', 'Safety Stitch', 'Rantai + Obras']
+            },
+            'interlock-flat': {
+                label: 'Interlock Flatbed',
+                title: 'Mesin Interlock Flatbed',
+                subtitle: 'Coverstitch Hemming',
+                desc: 'Coverstitch dan interlock flat-bed untuk menjahit tepian kaos, lengan, dan bawah baju pada pakaian rajut.',
+                specs: ['Coverstitch', 'Flat Bed', '2/3 Jarum', '6000 SPM']
+            },
+            'interlock-cylinder': {
+                label: 'Interlock Cylinder Bed',
+                title: 'Mesin Interlock Cylinder Bed',
+                subtitle: 'Manset & Kerah',
+                desc: 'Interlock cylinder-bed untuk menjahit manset, pinggang, dan jahitan melingkar pada pakaian tubular.',
+                specs: ['Cylinder Bed', 'Kerja Tubular', 'Coverstitch', 'Dapat Disesuaikan']
+            },
+            buttonholer: {
+                label: 'Mesin Lubang Kancing',
+                title: 'Mesin Lubang Kancing',
+                subtitle: 'Lubang Kancing Otomatis',
+                desc: 'Mesin lubang kancing otomatis yang dapat diprogram dengan ukuran mata dan kerapatan jahitan yang konsisten. Mendukung lubang kancing eyelet dan lurus.',
+                specs: ['Program Otomatis', 'Eyelet/Lurus', 'Ukuran Konsisten', 'Kecepatan Tinggi']
+            },
+            'button-attach': {
+                label: 'Pemasang Kancing',
+                title: 'Mesin Pemasang Kancing',
+                subtitle: 'Jahit Kancing Otomatis',
+                desc: 'Mesin jahit kancing otomatis yang memasang kancing datar dan tangkai dengan pola jahitan yang dapat diprogram.',
+                specs: ['Datar/Tangkai', 'Otomatis', 'Silang/Zigzag', 'Dapat Diprogram']
+            },
+            bartack: {
+                label: 'Mesin Bartack',
+                title: 'Mesin Bartack',
+                subtitle: 'Jahitan Penguat',
+                desc: 'Mesin bartack berkecepatan tinggi untuk memperkuat titik tekanan di sudut saku, loop ikat pinggang, dan ujung jahitan.',
+                specs: ['Penguatan', '27-42 Jahitan', 'Potong Otomatis', 'Pola Jig']
+            },
+            keyhole: {
+                label: 'Lubang Kancing Keyhole',
+                title: 'Mesin Lubang Kancing Keyhole',
+                subtitle: 'Lubang Kancing Eyelet',
+                desc: 'Mesin lubang kancing keyhole yang menghasilkan lubang kancing ujung bulat untuk kain berat, jeans, dan pakaian luar.',
+                specs: ['Potong Keyhole', 'Kain Berat', 'Jeans/Denim', 'Penjepit Otomatis']
+            }
+        }
     },
-    autocutter: {
-        title: 'Automatic CNC Cutter',
-        subtitle: 'Precision Cutting System',
-        img: 'https://images.pexels.com/photos/5799413/pexels-photo-5799413.jpeg?auto=compress&cs=tinysrgb&w=1200',
-        desc: 'Computer-controlled cutting systems for multi-ply fabric layers. Knife, laser, or ultrasonic cutting options with automatic nesting for minimal waste.',
-        specs: ['CNC Control', 'Multi-Ply', 'Nesting Software', 'Knife/Laser']
-    },
-    endcutter: {
-        title: 'End Cutter Machine',
-        subtitle: 'Clean Edge Finishing',
-        img: 'https://images.pexels.com/photos/5799413/pexels-photo-5799413.jpeg?auto=compress&cs=tinysrgb&w=1200',
-        desc: 'Precision end cutting for trimming fabric rolls and panels to exact lengths in continuous production lines.',
-        specs: ['Precision Cut', 'Auto Feed', 'Roll Compatible', 'Heavy Duty']
-    },
-    'single-needle': {
-        title: 'High Speed Single Needle Lockstitch',
-        subtitle: 'Direct-Drive Industrial Sewing',
-        img: 'https://images.pexels.com/photos/4614230/pexels-photo-4614230.jpeg?auto=compress&cs=tinysrgb&w=1200',
-        desc: 'Direct-drive lockstitch with automatic thread trimmer, back tack, and presser foot lifter. The workhorse of any garment factory.',
-        specs: ['5000 SPM', 'Auto Trim', 'Direct Drive', 'LED Light']
-    },
-    'overlock-4t': {
-        title: '4 Thread Overlock Machine',
-        subtitle: 'Seam & Edge Finishing',
-        img: 'https://images.pexels.com/photos/6764235/pexels-photo-6764235.jpeg?auto=compress&cs=tinysrgb&w=1200',
-        desc: 'High-speed 4-thread overlock for simultaneous seam joining and edge finishing. Ideal for knit and woven fabrics.',
-        specs: ['7000 SPM', '4 Thread', 'Differential Feed', 'Auto Lubrication']
-    },
-    'overlock-5t': {
-        title: '5 Thread Overlock Machine',
-        subtitle: 'Safety Stitch System',
-        img: 'https://images.pexels.com/photos/6764235/pexels-photo-6764235.jpeg?auto=compress&cs=tinysrgb&w=1200',
-        desc: '5-thread overlock combining a chainstitch with overlock for a safety stitch in a single pass. Premium finishing for high-end garments.',
-        specs: ['7000 SPM', '5 Thread', 'Safety Stitch', 'Chain + Overlock']
-    },
-    'interlock-flat': {
-        title: 'Flatbed Interlock Machine',
-        subtitle: 'Coverstitch Hemming',
-        img: 'https://images.pexels.com/photos/3811855/pexels-photo-3811855.jpeg?auto=compress&cs=tinysrgb&w=1200',
-        desc: 'Flat-bed coverstitch and interlock for hemming t-shirts, sleeves, and bottom hems on knitwear.',
-        specs: ['Coverstitch', 'Flat Bed', '2/3 Needle', '6000 SPM']
-    },
-    'interlock-cylinder': {
-        title: 'Cylinder Bed Interlock Machine',
-        subtitle: 'Cuffs & Collars',
-        img: 'https://images.pexels.com/photos/3811855/pexels-photo-3811855.jpeg?auto=compress&cs=tinysrgb&w=1200',
-        desc: 'Cylinder-bed interlock for sewing cuffs, waistbands, and circular seams on tubular garments.',
-        specs: ['Cylinder Bed', 'Tubular Work', 'Coverstitch', 'Adjustable']
-    },
-    buttonholer: {
-        title: 'Button Holer Machine',
-        subtitle: 'Automatic Buttonhole',
-        img: 'https://images.pexels.com/photos/5799370/pexels-photo-5799370.jpeg?auto=compress&cs=tinysrgb&w=1200',
-        desc: 'Programmable automatic buttonhole machines with consistent eye size and stitch density. Supports eyelet and straight buttonholes.',
-        specs: ['Auto Program', 'Eyelet/Straight', 'Consistent Size', 'High Speed']
-    },
-    'button-attach': {
-        title: 'Button Attaching Machine',
-        subtitle: 'Automatic Sew-On',
-        img: 'https://images.pexels.com/photos/5799370/pexels-photo-5799370.jpeg?auto=compress&cs=tinysrgb&w=1200',
-        desc: 'Automatic button sewing machines that attach flat and shank buttons with programmable stitch patterns.',
-        specs: ['Flat/Shank', 'Auto Feed', 'Cross/Zigzag', 'Programmable']
-    },
-    bartack: {
-        title: 'Bartack Machine',
-        subtitle: 'Reinforcement Stitching',
-        img: 'https://images.pexels.com/photos/4614230/pexels-photo-4614230.jpeg?auto=compress&cs=tinysrgb&w=1200',
-        desc: 'High-speed bartack machines for reinforcing stress points at pocket corners, belt loops, and seam ends.',
-        specs: ['Reinforcement', '27-42 Stitches', 'Auto Trim', 'Jig Pattern']
-    },
-    keyhole: {
-        title: 'Keyhole Button Holer',
-        subtitle: 'Eyelet Buttonhole',
-        img: 'https://images.pexels.com/photos/5799370/pexels-photo-5799370.jpeg?auto=compress&cs=tinysrgb&w=1200',
-        desc: 'Keyhole buttonhole machines producing rounded-end buttonholes for heavy fabrics, jeans, and outerwear.',
-        specs: ['Keyhole Cut', 'Heavy Fabric', 'Jeans/Denim', 'Auto Clamp']
+
+    zh: {
+        groups: {
+            cadcam: '📐 CAD / CAM',
+            cutting: '🏭 裁剪设备',
+            sewing: '🧵 缝纫机',
+            overlock: '🔄 包缝机',
+            interlock: '👕 绷缝机',
+            special: '⚙️ 特种机'
+        },
+        selectPrompt: '从左侧面板选择机器查看详情',
+        clickPrompt: '点击机器在此查看',
+        machines: {
+            plotter: {
+                label: '绘图仪 / 纸样绘制',
+                title: '绘图仪 / 纸样绘制机',
+                subtitle: 'CAD/CAM 纸样输出',
+                desc: '高精度笔式绘图仪，用于从CAD软件输出服装纸样。支持HPGL、DXF格式，连续进纸，适用于大规模生产。',
+                specs: ['大幅面', 'HPGL/DXF', '自动进纸', '±0.5mm精度']
+            },
+            spreading: {
+                label: '铺布机',
+                title: '自动铺布机',
+                subtitle: '自动化物料处理',
+                desc: '自动铺布机，用于将多层面料以恒定张力和边缘对齐铺设。减少人工劳动和材料浪费。',
+                specs: ['自动铺布', '张力控制', '边缘对齐', '层数计数']
+            },
+            autocutter: {
+                label: '自动裁剪机',
+                title: 'CNC自动裁剪机',
+                subtitle: '精密裁剪系统',
+                desc: '计算机控制的多层面料裁剪系统。可选刀片、激光或超声波裁剪，自动排料系统，最大限度减少浪费。',
+                specs: ['CNC控制', '多层裁剪', '排料软件', '刀片/激光']
+            },
+            endcutter: {
+                label: '断布机',
+                title: '断布机',
+                subtitle: '精准切边',
+                desc: '在连续生产线中将面料卷和裁片精确裁剪到指定长度。',
+                specs: ['精准裁剪', '自动进料', '卷料兼容', '重型']
+            },
+            'single-needle': {
+                label: '高速单针平缝机',
+                title: '高速单针平缝机',
+                subtitle: '直驱工业缝纫',
+                desc: '直驱平缝机，配备自动剪线、倒缝和自动抬压脚。任何服装厂的主力设备。',
+                specs: ['5000转/分', '自动剪线', '直驱', 'LED灯']
+            },
+            'overlock-4t': {
+                label: '4线包缝机',
+                title: '4线包缝机',
+                subtitle: '缝合与包边',
+                desc: '高速4线包缝机，同时完成缝合和包边。适用于针织和梭织面料。',
+                specs: ['7000转/分', '4线', '差动送料', '自动润滑']
+            },
+            'overlock-5t': {
+                label: '5线包缝机',
+                title: '5线包缝机',
+                subtitle: '安全线迹系统',
+                desc: '5线包缝机将链式线迹与包缝结合，一次完成安全线迹。高端服装的优质缝制。',
+                specs: ['7000转/分', '5线', '安全线迹', '链式+包缝']
+            },
+            'interlock-flat': {
+                label: '平台式绷缝机',
+                title: '平台式绷缝机',
+                subtitle: '卷边缝合',
+                desc: '平台式绷缝机和覆盖缝机，用于T恤、袖口和针织服装下摆的卷边。',
+                specs: ['覆盖缝', '平台式', '2/3针', '6000转/分']
+            },
+            'interlock-cylinder': {
+                label: '筒式绷缝机',
+                title: '筒式绷缝机',
+                subtitle: '袖口与领口',
+                desc: '筒式绷缝机，用于缝制袖口、腰带和筒形服装的环形接缝。',
+                specs: ['筒式', '筒形作业', '覆盖缝', '可调节']
+            },
+            buttonholer: {
+                label: '锁眼机',
+                title: '自动锁眼机',
+                subtitle: '自动锁眼',
+                desc: '可编程自动锁眼机，扣眼尺寸和针迹密度一致。支持圆头和平头锁眼。',
+                specs: ['自动编程', '圆头/平头', '尺寸一致', '高速']
+            },
+            'button-attach': {
+                label: '钉扣机',
+                title: '自动钉扣机',
+                subtitle: '自动缝扣',
+                desc: '自动缝扣机，可缝制平面扣和柄扣，缝纫图案可编程。',
+                specs: ['平面/柄扣', '自动送料', '十字/之字', '可编程']
+            },
+            bartack: {
+                label: '套结机',
+                title: '套结机',
+                subtitle: '加固缝纫',
+                desc: '高速套结机，用于加固口袋角、腰带环和接缝末端等受力点。',
+                specs: ['加固', '27-42针', '自动剪线', '夹具图案']
+            },
+            keyhole: {
+                label: '圆头锁眼机',
+                title: '圆头锁眼机',
+                subtitle: '圆头扣眼',
+                desc: '圆头锁眼机，生产用于厚重面料、牛仔裤和外套的圆头扣眼。',
+                specs: ['圆头切割', '厚面料', '牛仔布', '自动夹紧']
+            }
+        }
     }
 };
 
+// ═══════════════════════════════════════
+// MACHINE IMAGES (same for all languages)
+// ═══════════════════════════════════════
+const images = {
+    plotter: 'https://images.pexels.com/photos/5799370/pexels-photo-5799370.jpeg?auto=compress&cs=tinysrgb&w=1200',
+    spreading: 'https://images.pexels.com/photos/5799431/pexels-photo-5799431.jpeg?auto=compress&cs=tinysrgb&w=1200',
+    autocutter: 'https://images.pexels.com/photos/5799413/pexels-photo-5799413.jpeg?auto=compress&cs=tinysrgb&w=1200',
+    endcutter: 'https://images.pexels.com/photos/5799413/pexels-photo-5799413.jpeg?auto=compress&cs=tinysrgb&w=1200',
+    'single-needle': 'https://images.pexels.com/photos/4614230/pexels-photo-4614230.jpeg?auto=compress&cs=tinysrgb&w=1200',
+    'overlock-4t': 'https://images.pexels.com/photos/6764235/pexels-photo-6764235.jpeg?auto=compress&cs=tinysrgb&w=1200',
+    'overlock-5t': 'https://images.pexels.com/photos/6764235/pexels-photo-6764235.jpeg?auto=compress&cs=tinysrgb&w=1200',
+    'interlock-flat': 'https://images.pexels.com/photos/3811855/pexels-photo-3811855.jpeg?auto=compress&cs=tinysrgb&w=1200',
+    'interlock-cylinder': 'https://images.pexels.com/photos/3811855/pexels-photo-3811855.jpeg?auto=compress&cs=tinysrgb&w=1200',
+    buttonholer: 'https://images.pexels.com/photos/5799370/pexels-photo-5799370.jpeg?auto=compress&cs=tinysrgb&w=1200',
+    'button-attach': 'https://images.pexels.com/photos/5799370/pexels-photo-5799370.jpeg?auto=compress&cs=tinysrgb&w=1200',
+    bartack: 'https://images.pexels.com/photos/4614230/pexels-photo-4614230.jpeg?auto=compress&cs=tinysrgb&w=1200',
+    keyhole: 'https://images.pexels.com/photos/5799370/pexels-photo-5799370.jpeg?auto=compress&cs=tinysrgb&w=1200'
+};
+
+// ═══════════════════════════════════════
+// ICONS
+// ═══════════════════════════════════════
+const icons = {
+    plotter: '📐', spreading: '📏', autocutter: '✂️', endcutter: '🔪',
+    'single-needle': '🧵', 'overlock-4t': '', 'overlock-5t': '',
+    'interlock-flat': '', 'interlock-cylinder': '',
+    buttonholer: '', 'button-attach': '', bartack: '', keyhole: ''
+};
+
+// ═══════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════
+let currentLang = 'en';
+let currentMachine = null;
+
+// ═══════════════════════════════════════
+// SIDEBAR ORDER
+// ═══════════════════════════════════════
+const sidebarOrder = [
+    { group: 'cadcam', items: ['plotter'] },
+    { group: 'cutting', items: ['spreading', 'autocutter', 'endcutter'] },
+    { group: 'sewing', items: ['single-needle'] },
+    { group: 'overlock', items: ['overlock-4t', 'overlock-5t'], sub: true },
+    { group: 'interlock', items: ['interlock-flat', 'interlock-cylinder'], sub: true },
+    { group: 'special', items: ['buttonholer', 'button-attach', 'bartack', 'keyhole'], sub: true }
+];
+
+// ═══════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════
+function renderSidebar() {
+    const lang = t[currentLang];
+    const sidebar = document.getElementById('sidebar');
+    let html = '';
+
+    sidebarOrder.forEach(section => {
+        html += `<div class="group-label">${lang.groups[section.group]}</div>`;
+        section.items.forEach(id => {
+            const m = lang.machines[id];
+            const cls = section.sub ? 'btn-item btn-sub' : 'btn-item';
+            const active = currentMachine === id ? ' active' : '';
+            const icon = icons[id] ? `<span class="icon">${icons[id]}</span>` : '';
+            html += `<button class="${cls}${active}" onclick="show('${id}')">${icon}${m.label}</button>`;
+        });
+    });
+
+    sidebar.innerHTML = html;
+    document.getElementById('placeholder-text').textContent = lang.clickPrompt;
+}
+
 function show(id) {
-    const m = machines[id];
+    const lang = t[currentLang];
+    const m = lang.machines[id];
     if (!m) return;
 
-    // Update active button
-    document.querySelectorAll('.btn-item').forEach(b => b.classList.remove('active'));
-    event.currentTarget.classList.add('active');
+    currentMachine = id;
+    renderSidebar();
 
-    // Update header
     document.getElementById('title').textContent = m.title;
     document.getElementById('subtitle').textContent = m.subtitle;
 
-    // Update content
     document.getElementById('content').innerHTML = `
         <div class="image-panel">
-            <img src="${m.img}" alt="${m.title}" loading="lazy">
+            <img src="${images[id]}" alt="${m.title}" loading="lazy">
             <div class="info">
                 <h3>${m.title}</h3>
                 <p>${m.desc}</p>
@@ -287,6 +540,29 @@ function show(id) {
         </div>
     `;
 }
+
+function setLang(lang) {
+    currentLang = lang;
+    // Update active button
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.lang-btn').forEach(b => {
+        if (b.textContent.includes(lang === 'en' ? 'English' : lang === 'id' ? 'Indonesia' : '中文'))
+            b.classList.add('active');
+    });
+
+    renderSidebar();
+
+    // If a machine is selected, re-render it
+    if (currentMachine) {
+        show(currentMachine);
+    } else {
+        document.getElementById('title').textContent = 'Machine Catalog';
+        document.getElementById('subtitle').textContent = t[lang].selectPrompt;
+    }
+}
+
+// Initial render
+renderSidebar();
 </script>
 
 </body>
